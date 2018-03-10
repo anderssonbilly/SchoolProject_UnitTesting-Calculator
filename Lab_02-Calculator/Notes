@@ -1,0 +1,16 @@
+Kalkylator
+	public calculateExpression(String expression)
+	
+	private add()
+	private substract()
+	private multipliply()
+	private divide()
+	private modulus()
+	
+String Evaluator
+	public evaluateExpression(String expression)
+	private shuntingYard(String expression)
+	
+Main
+	While loop menu
+	Scanner input reader
