@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -11,13 +12,13 @@ public class Evaluator {
 
 	// Check if the String is a valid expression and sets it up to be
 	// converted to Reverse Polish Notation with the Shunting Yard algorithm
-	public ArrayList<String> evaluateExpression(String expression) {
+	public ArrayList<String> evaluateExpression(String expression) throws ParseException {
 
 		// First check expression for illegal characters
 		Matcher matcher = pattern.matcher(expression);
 		if (matcher.find())
-			// TODO If found throw exception
-			return null;
+			// If found throw exception
+			throw new ParseException("Expression contains illegal characters", 0);
 
 		// Set up an array for the infix expression
 		infix = new ArrayList<String>();
@@ -30,6 +31,7 @@ public class Evaluator {
 
 		// Loop throu String expression token for token
 		for (int i = 0; i < expression.length(); i++) {
+			System.out.println("iteration: " + i);
 			String token = String.valueOf(expression.charAt(i));
 
 			// If the token at the beginning is an operator
@@ -39,29 +41,42 @@ public class Evaluator {
 					// Push to stack
 					stack.push(token);
 				else
-					// TODO Throw exception
-					return null;
-			} else if (IntChecker.check(token)) {
-				// If token is a number, push to stack
-				stack.push(token);
-			} else {
-				// If token is an operator and the top token on the stack aint
+					// Throw exception is token at begining aint a -
+					throw new ParseException("Expression cant begin with an operator", 0);
+			} else if (!IntChecker.check(token)) {
+				if(i>3) {
+					// Check if there are two operators in a row
+					boolean last = IntChecker.check(infix.get(infix.size()-1));
+					boolean nextToLast = IntChecker.check(infix.get(infix.size()-2));
+					// If there are throw an exception
+					if(!last && !nextToLast)
+							throw new ParseException("not last and next Cant have multiple operators in a row", 0);
+				}
+				// Check if last in infix is an operator and top of stack
+				if(!stack.empty()) 
+					// If there are throw an exception
+					if(!IntChecker.check(stack.peek()))
+							throw new ParseException("Top of stack is operator Cant have multiple operators in a row", 0);
+			
+				// If token isnt an number and the top token on the stack
 				// pop tokens from the stack into a string
 				// else throw exception
-				System.out.println("Stack: " + stack.toString());
-				if (IntChecker.check(stack.peek())) {
+				if (!stack.empty()) {
 					while (!stack.empty())
 						sb.insert(0, stack.pop());
-				} else
-					// TODO Throw exception
-					return null;
 
-				// Then add that string to infix expression
-				infix.add(sb.toString());
-				sb = new StringBuilder();
-				// Add operator to infix after number
-				infix.add(token);
-			}
+					// Then add that string to infix expression
+					infix.add(sb.toString());
+					sb = new StringBuilder();
+					// Add operator to infix after number
+					infix.add(token);
+				} else if (token.equals("-")) 
+					// Push minus to stack to create negative numbers
+						stack.push(token);				
+				 else
+					throw new ParseException("Cant have multiple operators in a row", 0);
+			} else
+				stack.push(token);
 		}
 
 		// Pop the last tokens from the stack and add to the expression
