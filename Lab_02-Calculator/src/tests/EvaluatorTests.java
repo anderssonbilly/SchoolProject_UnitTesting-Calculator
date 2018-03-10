@@ -22,6 +22,7 @@ class EvaluatorTests {
 	@MethodSource("stringArrayProvider")
 	void smallExpressionTest(String expression, ArrayList<String> expected) {
 		Evaluator eval = new Evaluator();
+		System.out.println(eval.evaluateExpression(expression));
 		assertEquals(expected, eval.evaluateExpression(expression));
 	}
 
@@ -30,6 +31,16 @@ class EvaluatorTests {
 		fail("Not yet implemented");
 	}
 
+	@Test
+	void opAtStartTest() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	void negativeAtStartTest() {
+		fail("Not yet implemented");
+	}
+	
 	@Test
 	void multipleOpsTest() {
 		fail("Not yet implemented");
@@ -52,6 +63,11 @@ class EvaluatorTests {
 
 	@Test
 	void wrongNumberOfParenthesesTest() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	void illegalCharactersTest() {
 		fail("Not yet implemented");
 	}
 }
