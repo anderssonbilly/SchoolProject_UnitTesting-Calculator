@@ -4,13 +4,12 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
-
 public class Evaluator {
 
 	private final Pattern pattern = Pattern.compile("[^0123456789/*\\-+^%.()]");
 	private ArrayList<String> infix;
 	private Stack<String> stack;
+	private Stack<String> pStack;
 
 	// Check if the String is a valid expression and sets it up to be
 	// converted to Reverse Polish Notation with the Shunting Yard algorithm
@@ -28,12 +27,26 @@ public class Evaluator {
 		// Stack to keep track of number
 		stack = new Stack<String>();
 
+		// Stack to check for the correct number of parentheseses
+		pStack = new Stack<String>();
+
 		// Stringbuilder for builder number to be added to expression
 		StringBuilder sb = new StringBuilder();
 
 		// Loop throu String expression token for token
 		for (int i = 0; i < expression.length(); i++) {
 			String token = String.valueOf(expression.charAt(i));
+
+			if (token.equals("(") || token.equals(")")) {
+				if (!pStack.isEmpty() && token.equals(")")) {
+					if (!pStack.pop().equals("("))
+						throw new ParseException("Wrong number of parentheseses", 0);
+				} else if (token.equals(")"))
+					throw new ParseException("Wrong number of parentheseses", 0);
+				else {
+					pStack.push(token);
+				}
+			}
 
 			// If the token at the beginning is an operator
 			if (i == 0 && !IntChecker.check(token)) {
@@ -47,11 +60,11 @@ public class Evaluator {
 					// Throw exception is token at begining aint a -
 					throw new ParseException("Expression cant begin with an operator", 0);
 			} else if (!IntChecker.check(token)) {
-//				System.out.println();
-//				System.out.println("At op check");
-//				System.out.println("token: " + token);
-//				System.out.println("Stack: " + stack.toString());
-//				System.out.println("infix: " + infix.toString());
+				// System.out.println();
+				// System.out.println("At op check");
+				// System.out.println("token: " + token);
+				// System.out.println("Stack: " + stack.toString());
+				// System.out.println("infix: " + infix.toString());
 
 				if (infix.size() > 2) {
 					// Check if there are two operators in a row
@@ -72,17 +85,17 @@ public class Evaluator {
 					if (!IntChecker.check(stack.peek()) && !(stack.peek().equals("-") && token.equals("(")))
 						throw new ParseException("Top of stack op - Cant have multiple operators in a row", 0);
 
-//					if (!(stack.peek().equals("-") && token.equals("("))) {
-						while (!stack.empty())
-							sb.insert(0, stack.pop());
+					// if (!(stack.peek().equals("-") && token.equals("("))) {
+					while (!stack.empty())
+						sb.insert(0, stack.pop());
 
-						// Then add that string to infix expression
-						infix.add(sb.toString());
-						sb = new StringBuilder();
-						// Add operator to infix after number
-						infix.add(token);
-//					} else
-//						stack.push(token);
+					// Then add that string to infix expression
+					infix.add(sb.toString());
+					sb = new StringBuilder();
+					// Add operator to infix after number
+					infix.add(token);
+					// } else
+					// stack.push(token);
 				} else if (token.equals("-"))
 					// Push minus to stack to create negative numbers
 					if (!infix.get(infix.size() - 1).equals(")"))
@@ -109,13 +122,16 @@ public class Evaluator {
 				stack.push(token);
 			}
 
-//			System.out.println();
-//			System.out.println("At end");
-//			System.out.println("token: " + token);
-//			System.out.println("Stack: " + stack.toString());
-//			System.out.println("infix: " + infix.toString());
+			// System.out.println();
+			// System.out.println("At end");
+			// System.out.println("token: " + token);
+			// System.out.println("Stack: " + stack.toString());
+			// System.out.println("infix: " + infix.toString());
 		}
 
+		if(!pStack.empty())
+			throw new ParseException("Wrong number of parentheseses", 0);
+		
 		// Pop the last tokens from the stack and add to the expression
 		while (!stack.empty())
 			sb.insert(0, stack.pop());
