@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class Evaluator {
 
-	private final Pattern pattern = Pattern.compile("[^0123456789/*\\-+^%.]");
+	private final Pattern pattern = Pattern.compile("[^0123456789/*\\-+^%.()]");
 	private ArrayList<String> infix;
 	private Stack<String> stack;
 

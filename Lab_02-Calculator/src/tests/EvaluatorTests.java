@@ -47,6 +47,21 @@ class EvaluatorTests {
 		assertEquals(expected, eval.evaluateExpression(expression));
 	}
 
+	static Stream<Arguments> negativeNumbersArgumentProvider() {
+		return Stream.of(Arguments.of("-1+2", (Object) new ArrayList<String>(Arrays.asList("-1", "+", "2"))),
+				Arguments.of("11--5", (Object) new ArrayList<String>(Arrays.asList("11", "-", "-5"))),
+				Arguments.of("100*-47", (Object) new ArrayList<String>(Arrays.asList("100", "*", "-47"))),
+				Arguments.of("-1--2--3", (Object) new ArrayList<String>(Arrays.asList("-1", "-", "-2", "-", "-3"))),
+				Arguments.of("10+-5+-5", (Object) new ArrayList<String>(Arrays.asList("10", "+", "-5", "+", "-5"))));
+	}
+
+	@ParameterizedTest
+	@MethodSource("negativeNumbersArgumentProvider")
+	void negativeNumbersTest(String expression, ArrayList<String> expected) throws ParseException {
+		Evaluator eval = new Evaluator();
+		assertEquals(expected, eval.evaluateExpression(expression));
+	}
+
 	@ParameterizedTest
 	@ValueSource(strings = { "/1+2", "*3-4", "+5/6", "^7*8", "%9/1" })
 	void opAtStartExceptionTest(String expression) {
@@ -74,18 +89,49 @@ class EvaluatorTests {
 		assertThrows(ParseException.class, () -> eval.evaluateExpression(expression));
 	}
 
-	@Test
-	void parenthesesTest() {
-		fail("Not yet implemented");
+	static Stream<Arguments> parenthesesArgumentProvider() {
+		return Stream.of(Arguments.of("(1+2)", (Object) new ArrayList<String>(Arrays.asList("(", "1", "+", "2", ")"))),
+				Arguments.of("(-1+2)", (Object) new ArrayList<String>(Arrays.asList("(", "-1", "+", "2", ")"))),
+				Arguments.of("(-1+-2)--2",
+						(Object) new ArrayList<String>(Arrays.asList("(", "-1", "+", "-2", ")", "-", "-2"))),
+				Arguments.of("(100*2)+10",
+						(Object) new ArrayList<String>(Arrays.asList("(", "100", "*", "2", ")", "+", "10"))),
+				Arguments.of("(1+(25-5))",
+						(Object) new ArrayList<String>(Arrays.asList("(", "1", "+", "(", "25", "-", "5", ")", ")"))),
+				Arguments.of("((1+5)*2)^4+(2-1)",
+						(Object) new ArrayList<String>(Arrays.asList("(", "(", "1", "+", "5", ")", "*", "2", ")", "^",
+								"4", "+", "(", "2", "-", "1", ")"))),
+				Arguments.of("-(5+5)", (Object) new ArrayList<String>(Arrays.asList("-(", "5", "+", "5", ")"))));
 	}
 
-	@Test
-	void wrongNumberOfParenthesesTest() {
-		fail("Not yet implemented");
+	@ParameterizedTest
+	@MethodSource("parenthesesArgumentProvider")
+	void parenthesesTest(String expression, ArrayList<String> expected) throws ParseException {
+		Evaluator eval = new Evaluator();
+		assertEquals(expected, eval.evaluateExpression(expression));
 	}
 
-	@Test
-	void illegalCharacterExceptionTest() {
-		fail("Not yet implemented");
+	static Stream<Arguments> wrongNumberOfParenthesesesArgumentProvider() {
+		return Stream.of(Arguments.of("1+2)", (Object) new ArrayList<String>(Arrays.asList("1", "+", "2", ")"))),
+				Arguments.of("(1-5", (Object) new ArrayList<String>(Arrays.asList("(", "1", "-", "5"))),
+				Arguments.of("(1+(2-1)",
+						(Object) new ArrayList<String>(Arrays.asList("(", "1", "+", "(", "2", "-", "1", ")"))),
+				Arguments.of("(1+2+(3+1))*2)", (Object) new ArrayList<String>(
+						Arrays.asList("(", "1", "+", "2", "+", "(", "3", "+", "1", ")", ")", "*", "2", ")"))));
 	}
+
+	@ParameterizedTest
+	@MethodSource("wrongNumberOfParenthesesesArgumentProvider")
+	void wrongNumberOfParenthesesTest(String expression, ArrayList<String> expected) throws ParseException {
+		Evaluator eval = new Evaluator();
+		assertEquals(expected, eval.evaluateExpression(expression));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "1+2a", "!1+2", "1+\2", "1&1+2", "{1+2}", "\n1+2", " ", "^","(?!)","[^abc]ab","System.out.println('test')" })
+	void illegalCharacterTest(String expression) throws ParseException {
+		Evaluator eval = new Evaluator();
+		assertThrows(ParseException.class, () -> eval.evaluateExpression(expression));
+	}
+	
 }
