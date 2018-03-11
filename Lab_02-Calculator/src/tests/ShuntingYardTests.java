@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ShuntingYardTests {
 
@@ -24,7 +25,7 @@ class ShuntingYardTests {
 
 	@ParameterizedTest
 	@MethodSource("smallExpressionArgumentProvider")
-	void smallExpressionTest(ArrayList<String> expression, ArrayList<String> expected) {
+	void smallExpressionTest(ArrayList<String> expression, ArrayList<String> expected) throws ParseException {
 		ShuntingYard sy = new ShuntingYard();
 		assertEquals(expected, sy.convert(expression));
 	}
@@ -49,14 +50,56 @@ class ShuntingYardTests {
 
 	@ParameterizedTest
 	@MethodSource("longExpressionArgumentProvider")
-	void longExpressionTest(ArrayList<String> expression, ArrayList<String> expected) {
+	void longExpressionTest(ArrayList<String> expression, ArrayList<String> expected) throws ParseException {
 		ShuntingYard sy = new ShuntingYard();
 		assertEquals(expected, sy.convert(expression));
 	}
 
-	@Test
-	void parenthesesTest() {
-		fail("Not yet implemented");
+	static Stream<Arguments> parenthesesesArgumentProvider() {
+		return Stream.of(
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("(","1", "+", "2",")")),
+						(Object) new ArrayList<String>(Arrays.asList("1", "2", "+"))),
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("2", "+", "3","-","(","1","+","3",")")),
+						(Object) new ArrayList<String>(Arrays.asList("2", "3", "+", "1", "3", "+", "-"))),
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("(","1","+","(","4", "+", "5",")","+","-1",")", "^", "2")),
+						(Object) new ArrayList<String>(Arrays.asList("1", "4", "5", "+", "+", "-1", "+", "2", "^"))));
 	}
 
+	@ParameterizedTest
+	@MethodSource("parenthesesesArgumentProvider")
+	void parenthesesesTest(ArrayList<String> expression, ArrayList<String> expected) throws ParseException {
+		ShuntingYard sy = new ShuntingYard();
+		assertEquals(expected, sy.convert(expression));
+	}
+
+	static Stream<Arguments> wrongNumberOfParenthesesesArgumentProvider() {
+		return Stream.of(
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("(","1", "+", "2",")",")"))),
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("(","2", "+", "3"))),
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("(","1","+","(","4","+","5",")"))));
+	}
+	
+	@ParameterizedTest
+	@MethodSource("wrongNumberOfParenthesesesArgumentProvider")
+	void wrongNumberOfParenthesesesTest(ArrayList<String> expression) {
+		ShuntingYard sy= new ShuntingYard();
+		assertThrows(ParseException.class, () -> sy.convert(expression));
+	}
+	
+	static Stream<Arguments> negativeArgumentProvider() {
+		return Stream.of(
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("-1", "+", "2")),
+						(Object) new ArrayList<String>(Arrays.asList("-1", "2", "+"))),
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("-","(","2", "+", "3",")","-","(","1","+","3",")")),
+						(Object) new ArrayList<String>(Arrays.asList("2", "3", "+", "-", "1", "3", "+", "-"))),
+				Arguments.of((Object) new ArrayList<String>(Arrays.asList("(","1","+","(","4", "+", "-5",")","+","-1",")", "^", "2")),
+						(Object) new ArrayList<String>(Arrays.asList("1", "4", "-5", "+", "+", "-1", "+", "2", "^"))));
+	}
+
+	@ParameterizedTest
+	@MethodSource("negativeArgumentProvider")
+	void negativeTest(ArrayList<String> expression, ArrayList<String> expected) throws ParseException {
+		ShuntingYard sy = new ShuntingYard();
+		assertEquals(expected, sy.convert(expression));
+	}
 }
