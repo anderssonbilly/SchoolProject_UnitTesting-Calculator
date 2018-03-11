@@ -5,7 +5,7 @@ public class Main {
 	public static void main(String[] args) {
 		Evaluator eval = new Evaluator();
 		try {
-			System.out.println(eval.evaluateExpression("-1+2"));
+			System.out.println(eval.evaluateExpression("-(5+5)"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

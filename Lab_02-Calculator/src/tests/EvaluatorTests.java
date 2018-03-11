@@ -63,7 +63,7 @@ class EvaluatorTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "/1+2", "*3-4", "+5/6", "^7*8", "%9/1" })
+	@ValueSource(strings = { "/1+2", "*3-4", "+5/6", "^7*8", "%9/1", "+(1+1)", "/(1+1)"  })
 	void opAtStartExceptionTest(String expression) {
 		Evaluator eval = new Evaluator();
 		assertThrows(ParseException.class, () -> eval.evaluateExpression(expression));
@@ -101,7 +101,7 @@ class EvaluatorTests {
 				Arguments.of("((1+5)*2)^4+(2-1)",
 						(Object) new ArrayList<String>(Arrays.asList("(", "(", "1", "+", "5", ")", "*", "2", ")", "^",
 								"4", "+", "(", "2", "-", "1", ")"))),
-				Arguments.of("-(5+5)", (Object) new ArrayList<String>(Arrays.asList("-(", "5", "+", "5", ")"))));
+				Arguments.of("-(5+5)", (Object) new ArrayList<String>(Arrays.asList("-","(", "5", "+", "5", ")"))));
 	}
 
 	@ParameterizedTest
@@ -113,7 +113,9 @@ class EvaluatorTests {
 
 	static Stream<Arguments> wrongNumberOfParenthesesesArgumentProvider() {
 		return Stream.of(Arguments.of("1+2)", (Object) new ArrayList<String>(Arrays.asList("1", "+", "2", ")"))),
+				Arguments.of("1+2))", (Object) new ArrayList<String>(Arrays.asList("1", "+", "2", ")", ")"))),
 				Arguments.of("(1-5", (Object) new ArrayList<String>(Arrays.asList("(", "1", "-", "5"))),
+				Arguments.of("((1-5", (Object) new ArrayList<String>(Arrays.asList("(", "(", "1", "-", "5"))),
 				Arguments.of("(1+(2-1)",
 						(Object) new ArrayList<String>(Arrays.asList("(", "1", "+", "(", "2", "-", "1", ")"))),
 				Arguments.of("(1+2+(3+1))*2)", (Object) new ArrayList<String>(
@@ -128,10 +130,11 @@ class EvaluatorTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "1+2a", "!1+2", "1+\2", "1&1+2", "{1+2}", "\n1+2", " ", "^","(?!)","[^abc]ab","System.out.println('test')" })
+	@ValueSource(strings = { "1+2a", "!1+2", "1+\2", "1&1+2", "{1+2}", "\n1+2", " ", "^", "(?!)", "[^abc]ab",
+			"System.out.println('test')" })
 	void illegalCharacterTest(String expression) throws ParseException {
 		Evaluator eval = new Evaluator();
 		assertThrows(ParseException.class, () -> eval.evaluateExpression(expression));
 	}
-	
+
 }
