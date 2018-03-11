@@ -9,7 +9,7 @@ Kalkylator
 	
 String Evaluator
 	public evaluateExpression(String expression)
-	private shuntingYard(String expression)
+	public shuntingYard(String expression)
 	
 Main
 	While loop menu
