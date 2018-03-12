@@ -1,28 +1,24 @@
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.provider.Arguments;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
+		Calculator calc = new Calculator();
 		Evaluator eval = new Evaluator();
-//		try {
-//			System.out.println(eval.evaluateExpression("(1+(25-5))"));
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
 		ShuntingYard sy = new ShuntingYard();
-//		try {
-//			System.out.println(sy.convert(new ArrayList<String>(Arrays.asList("(","1","+","(","4", "+", "-5",")","+","-1",")", "^", "2"))));
-//		} catch (ParseException e) {
-//			// TODO: handle exception
-//		}
-//		try {
-//			System.out.println(sy.convert(eval.evaluateExpression("1+2/5+(8*7)")));
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		String expression = "-2+1";
+		
+		System.out.println(calc.calculate(expression));
+//		System.out.println(-2d + 1d);
+//		System.out.println(Double.valueOf("-1"));
+//		return Stream.of(Arguments.of("-2+1", -1.0),
+//				Arguments.of("2+-1", 1.0),
+//				Arguments.of("2--2",4.0));
 	}
 
 }
