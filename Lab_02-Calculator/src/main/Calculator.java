@@ -19,8 +19,9 @@ public class Calculator {
 		stack = new Stack<Double>();
 
 		for (String token : expression) {
-			if (token.length() == 1 && !IntChecker.check(String.valueOf(token.charAt(0)))) {
-					double operand2 = stack.pop();
+			if (token.length() == 1 && !IntChecker.check(String.valueOf(token.charAt(0))) && !stack.empty()) {
+				double operand2 = stack.pop();
+				if (!stack.empty()) {
 					double operand1 = stack.pop();
 
 					if (token.equals("-")) {
@@ -42,7 +43,8 @@ public class Calculator {
 						throw new ArithmeticException(
 								"General arimethic exception, cant calculate " + operand1 + token + operand2);
 					}
-				
+				}else if(token.equals("-"))
+					stack.push(convertToDouble(token + operand2));
 			} else {
 				stack.push(convertToDouble(token));
 			}

@@ -11,14 +11,13 @@ public class Main {
 		Calculator calc = new Calculator();
 		Evaluator eval = new Evaluator();
 		ShuntingYard sy = new ShuntingYard();
-		String expression = "-2+1";
+		String expression = "-(10+5)+20";
+		
+//		System.out.println(sy.convert(eval.evaluateExpression(expression)));
 		
 		System.out.println(calc.calculate(expression));
-//		System.out.println(-2d + 1d);
-//		System.out.println(Double.valueOf("-1"));
-//		return Stream.of(Arguments.of("-2+1", -1.0),
-//				Arguments.of("2+-1", 1.0),
-//				Arguments.of("2--2",4.0));
+
+	
 	}
 
 }

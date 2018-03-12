@@ -136,8 +136,18 @@ class CalculatorTests {
 		fail("Not yet implemented");
 	}
 	
-	@Test
-	void parenthesesesTest() {
-		fail("Not yet implemented");
+	static Stream<Arguments> parenthesesesArgumentProvider() {
+		return Stream.of(Arguments.of("(1+2)*(3+4)", 21.0),
+				Arguments.of("10/(2+3)", 2.0),
+				Arguments.of("-(10+5)+20",5.0),
+				Arguments.of("(1+2)*(-1--6)",15.0),
+				Arguments.of("(1+2)*-(-1--6)",-5.0));
+	}
+
+	@ParameterizedTest
+	@MethodSource("parenthesesesArgumentProvider")
+	void parenthesesesTest(String expression, double expected) throws ParseException {
+		Calculator calc = new Calculator();
+		assertEquals(expected, calc.calculate(expression));;
 	}
 }
