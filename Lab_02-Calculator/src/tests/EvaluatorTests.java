@@ -125,4 +125,17 @@ class EvaluatorTests {
 		assertThrows(ParseException.class, () -> eval.evaluateExpression(expression));
 	}
 
+	static Stream<Arguments> decimalArgumentProvider() {
+		return Stream.of(Arguments.of("1.5+2", (Object) new ArrayList<String>(Arrays.asList("1.5", "+", "2"))),
+				Arguments.of("1--5.5", (Object) new ArrayList<String>(Arrays.asList("1", "-", "-5.5"))),
+				Arguments.of("100.55*2", (Object) new ArrayList<String>(Arrays.asList("100.55", "*", "2"))));
+	}
+
+	@ParameterizedTest
+	@MethodSource("decimalArgumentProvider")
+	void decimalTest(String expression, ArrayList<String> expected) throws ParseException {
+		Evaluator eval = new Evaluator();
+		assertEquals(expected, eval.evaluateExpression(expression));
+	}
+	
 }

@@ -10,7 +10,7 @@ public class Calculator {
 
 	public double calculate(String expression) throws ParseException {
 		eval = new Evaluator();
-		ShuntingYard sy = new ShuntingYard();
+		sy = new ShuntingYard();
 
 		// Reverse polish notation evaluation
 		return rpnEvaluation(sy.convert(eval.evaluateExpression(expression)));

@@ -1,9 +1,4 @@
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Stream;
-
-import org.junit.jupiter.params.provider.Arguments;
 
 public class Main {
 
@@ -12,7 +7,7 @@ public class Main {
 		Evaluator eval = new Evaluator();
 		ShuntingYard sy = new ShuntingYard();
 		
-		String expression = "(2+5)*(2+5)/49";
+		String expression = "1.5+0.5";
 		
 		System.out.println();
 		try {
@@ -22,9 +17,8 @@ public class Main {
 		}
 		
 		try {
-			System.out.println(calc.calculate(expression));
+			System.out.println(eval.evaluateExpression(expression));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
