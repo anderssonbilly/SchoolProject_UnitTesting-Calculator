@@ -41,7 +41,7 @@ public class Calculator {
 						if (operand2 != 0)
 							stack.push(operand1 / operand2);
 						else
-							throw new ArithmeticException("Division by 0 exception");
+							throw new ArithmeticException("Division by zero exception");
 					} else if (token.equals("*"))
 						stack.push(operand1 * operand2);
 					else if (token.equals("%"))
@@ -64,6 +64,9 @@ public class Calculator {
 
 		}
 		// return number from stack, this is out result
+		// If there isnt any number on the stack throw an exception
+		if (stack.empty())
+			throw new ArithmeticException("Cant calculate one number only exception");
 		return stack.pop();
 	}
 

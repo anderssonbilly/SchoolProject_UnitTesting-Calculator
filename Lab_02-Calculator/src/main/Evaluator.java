@@ -65,7 +65,7 @@ public class Evaluator {
 					infix.add(token);
 				else
 					// Throw exception is token at begining is any other character
-					throw new ParseException("Expression cant begin with an operator", 0);
+					throw new ParseException("Expression cant begin with " + token, 0);
 			} else if (!IntChecker.check(token)) {
 				// If the token is an operator
 

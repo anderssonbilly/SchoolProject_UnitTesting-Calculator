@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class CalculatorTests {
 
@@ -25,8 +26,10 @@ class CalculatorTests {
 	}
 
 	@Test
-	void addOverflowTest() {
-		fail("Not yet implemented");
+	void overflowTest() {
+		String expression = "1+" + String.valueOf(Double.MAX_VALUE);
+		Calculator calc = new Calculator();
+		assertThrows(ParseException.class, () -> calc.calculate(expression));
 	}
 
 	static Stream<Arguments> substractArgumentProvider() {
@@ -44,8 +47,10 @@ class CalculatorTests {
 	}
 
 	@Test
-	void substractUnderflowTest() {
-		fail("Not yet implemented");
+	void underflowTest() {
+		String expression = "1-" + String.valueOf(Double.MIN_VALUE);
+		Calculator calc = new Calculator();
+		assertThrows(ParseException.class, () -> calc.calculate(expression));
 	}
 
 	static Stream<Arguments> multiplyArgumentProvider() {
@@ -60,11 +65,6 @@ class CalculatorTests {
 	void multiplyTest(String expression, double expected) throws ParseException {
 		Calculator calc = new Calculator();
 		assertEquals(expected, calc.calculate(expression));;
-	}
-
-	@Test
-	void multiplyOverflowTest() {
-		fail("Not yet implemented");
 	}
 
 	static Stream<Arguments> divideArgumentProvider() {
@@ -87,6 +87,12 @@ class CalculatorTests {
 		assertThrows(ArithmeticException.class, () -> calc.calculate("2/0"));
 	}
 
+	@Test
+	void oneNumberandOpTest() {
+		Calculator calc = new Calculator();
+		assertThrows(ArithmeticException.class, () -> calc.calculate("1+"));
+	}
+	
 	static Stream<Arguments> modulusArgumentProvider() {
 		return Stream.of(Arguments.of("25%10", 5.0),
 				Arguments.of("7%4", 3.0),
@@ -113,9 +119,17 @@ class CalculatorTests {
 		assertEquals(expected, calc.calculate(expression));;
 	}
 	
-	@Test
-	void decimalTest() {
-		fail("Not yet implemented");
+	static Stream<Arguments> decimalArgumentProvider() {
+		return Stream.of(Arguments.of("0.5+1.5", 2.0),
+				Arguments.of("2*0.2", 0.4),
+				Arguments.of("20*0.7",14.0));
+	}
+
+	@ParameterizedTest
+	@MethodSource("decimalArgumentProvider")
+	void decimalTest(String expression, double expected) throws ParseException {
+		Calculator calc = new Calculator();
+		assertEquals(expected, calc.calculate(expression));;
 	}
 	
 	static Stream<Arguments> negativeArgumentProvider() {
@@ -131,9 +145,17 @@ class CalculatorTests {
 		assertEquals(expected, calc.calculate(expression));;
 	}
 	
-	@Test
-	void multipleOpsTest() {
-		fail("Not yet implemented");
+	static Stream<Arguments> multipleOpsArgumentProvider() {
+		return Stream.of(Arguments.of("2+1*25/2-(13*7)", -76.5),
+				Arguments.of("1-1-5-25*10", -255.0),
+				Arguments.of("(2+5)*(2+5)/49",1.0));
+	}
+
+	@ParameterizedTest
+	@MethodSource("multipleOpsArgumentProvider")
+	void multipleOpsTest(String expression, double expected) throws ParseException {
+		Calculator calc = new Calculator();
+		assertEquals(expected, calc.calculate(expression));;
 	}
 	
 	static Stream<Arguments> parenthesesesArgumentProvider() {
@@ -147,6 +169,14 @@ class CalculatorTests {
 	@ParameterizedTest
 	@MethodSource("parenthesesesArgumentProvider")
 	void parenthesesesTest(String expression, double expected) throws ParseException {
+		Calculator calc = new Calculator();
+		assertEquals(expected, calc.calculate(expression));;
+	}
+	
+	@Test
+	void sevenPrecentOfThirtyTest() throws ParseException {
+		String expression = "30*0.07";
+		double expected = 2.1;
 		Calculator calc = new Calculator();
 		assertEquals(expected, calc.calculate(expression));;
 	}
