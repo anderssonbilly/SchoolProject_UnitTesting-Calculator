@@ -61,7 +61,7 @@ public class Main {
 		System.out.println("");
 		System.out.println("------");
 		System.out.println("");
-		System.out.println("Laboration 2 - Calcylator");
+		System.out.println("Laboration 2 - Calculator");
 		System.out.println("Author: Billy Andersson - anderssonbilly@hotmail.com");
 		System.out.println("");
 		System.out.println("Can handle: + - * / % ^");
