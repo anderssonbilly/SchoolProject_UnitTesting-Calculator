@@ -67,7 +67,19 @@ public class Calculator {
 		// If there isnt any number on the stack throw an exception
 		if (stack.empty())
 			throw new ArithmeticException("Cant calculate one number only exception");
-		return stack.pop();
+		
+		// If the result is infinite or -infinite we got double overflow or underflow
+		double result = stack.pop();
+		if(result == Double.POSITIVE_INFINITY)
+			throw new ArithmeticException("Double overflow exception");
+		else if(result == Double.NEGATIVE_INFINITY) 
+			throw new ArithmeticException("Double underflow exception");
+		
+		// And if there are more results left in the stack we had no operator in expression
+		if(!stack.empty())
+			throw new ArithmeticException("No operator exception");
+		
+		return result;
 	}
 
 	private double convertToDouble(String i) throws ArithmeticException {

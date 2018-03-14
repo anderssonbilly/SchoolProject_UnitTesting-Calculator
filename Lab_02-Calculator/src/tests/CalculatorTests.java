@@ -26,9 +26,9 @@ class CalculatorTests {
 
 	@Test
 	void overflowTest() {
-		String expression = "1+" + String.valueOf(Double.MAX_VALUE);
+		String expression = "10^1000";
 		Calculator calc = new Calculator();
-		assertThrows(ParseException.class, () -> calc.calculate(expression));
+		assertThrows(ArithmeticException.class, () -> calc.calculate(expression));
 	}
 
 	static Stream<Arguments> substractArgumentProvider() {
@@ -47,9 +47,9 @@ class CalculatorTests {
 
 	@Test
 	void underflowTest() {
-		String expression = "1-" + String.valueOf(Double.MIN_VALUE);
+		String expression = "1-10^1000";
 		Calculator calc = new Calculator();
-		assertThrows(ParseException.class, () -> calc.calculate(expression));
+		assertThrows(ArithmeticException.class, () -> calc.calculate(expression));
 	}
 
 	static Stream<Arguments> multiplyArgumentProvider() {
@@ -178,5 +178,11 @@ class CalculatorTests {
 		double expected = 2.1;
 		Calculator calc = new Calculator();
 		assertEquals(expected, calc.calculate(expression));;
+	}
+	
+	@Test
+	void noOperatorTest(){
+		Calculator calc = new Calculator();
+		assertThrows(ArithmeticException.class, () -> calc.calculate("1(1)"));
 	}
 }

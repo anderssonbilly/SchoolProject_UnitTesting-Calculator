@@ -15,6 +15,10 @@ public class Evaluator {
 	// converted to Reverse Polish Notation with the Shunting Yard algorithm
 	public ArrayList<String> evaluateExpression(String expression) throws ParseException {
 
+		// Remove all spaces and replace all , with .
+		expression = expression.replaceAll(",", ".");
+		expression = expression.replaceAll(" ", "");
+		
 		// First check expression for illegal characters
 		Matcher matcher = pattern.matcher(expression);
 		if (matcher.find())

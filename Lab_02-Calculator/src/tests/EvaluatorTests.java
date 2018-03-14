@@ -118,7 +118,7 @@ class EvaluatorTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "1+2a", "!1+2", "1+\2", "1&1+2", "{1+2}", "\n1+2", " ", "^", "(?!)", "[^abc]ab",
+	@ValueSource(strings = { "1+2a", "!1+2", "1+\2", "1&1+2", "{1+2}", "\n1+2", "^", "(?!)", "[^abc]ab",
 			"System.out.println('test')" })
 	void illegalCharacterTest(String expression) throws ParseException {
 		Evaluator eval = new Evaluator();
@@ -127,6 +127,7 @@ class EvaluatorTests {
 
 	static Stream<Arguments> decimalArgumentProvider() {
 		return Stream.of(Arguments.of("1.5+2", (Object) new ArrayList<String>(Arrays.asList("1.5", "+", "2"))),
+				Arguments.of("1,5+2", (Object) new ArrayList<String>(Arrays.asList("1.5", "+", "2"))),
 				Arguments.of("1--5.5", (Object) new ArrayList<String>(Arrays.asList("1", "-", "-5.5"))),
 				Arguments.of("100.55*2", (Object) new ArrayList<String>(Arrays.asList("100.55", "*", "2"))));
 	}

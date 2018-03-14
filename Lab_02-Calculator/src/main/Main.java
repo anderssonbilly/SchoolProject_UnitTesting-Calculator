@@ -1,4 +1,3 @@
-import java.text.ParseException;
 import java.util.Scanner;
 
 public class Main {
@@ -37,17 +36,19 @@ public class Main {
 				printCommands();
 			} else if (cmd.toLowerCase().equals("info")) {
 				printInfo();
-			} else if (cmd.toLowerCase().equals("shunting")) {
+			} else if (cmd.toLowerCase().equals("rpn")) {
 				shunting = (shunting) ? false: true;
 			} else {
 				System.out.println("");
 				try {
 					if(shunting) {
+						String postfix = sy.convert(eval.evaluateExpression(cmd)).toString();
 						System.out.println("Postfix:");
-						System.out.println(sy.convert(eval.evaluateExpression(cmd)));
+						System.out.println(postfix);
 					}
+					double result = calc.calculate(cmd);
 					System.out.println("Result: ");
-					System.out.println(calc.calculate(cmd));
+					System.out.println(result);
 				} catch (Exception e) {
 					System.err.println(e.getClass().getSimpleName() + ": " + e.getMessage());
 				}
@@ -67,9 +68,10 @@ public class Main {
 		System.out.println("It also supports negative numbers, decimals and parentheseses");
 		System.out.println("");
 		System.out.println("Write expression and press enter to get result");
-		System.out.println("The expression can't contain any spaces and decimals should be witten with an .");
+		System.out.println("The expression can't contain any spaces or other illegal characters");
 		System.out.println("");
 		System.out.println("Type 'cmd' to see extra commands");
+		System.out.println("Type 'exit' to termniate the program");
 	}
 
 	public static void printCommands() {
@@ -80,7 +82,7 @@ public class Main {
 		System.out.println("");
 		System.out.println("info - Shows startup info");
 		System.out.println("cmd  - Shows this info");
-		System.out.println("shunting - Toggles viewing of expression in postfix");
+		System.out.println("rpn - Toggles viewing of expression in postfix");
 		System.out.println("exit - Exits the program");
 	}
 }
