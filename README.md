@@ -4,6 +4,7 @@ Lab 2 - Calculator
 Author: Billy Andersson (anderssonbilly@hotmail.com)
 
 ---Info
+
 Calculator created for assigment laboration 2, course Testdriven Development.
 
 It supports addition, substraction, multiplicatiom, division, modulus, power to, parentheseses and negative numbers.
@@ -19,6 +20,7 @@ The Shunting Yard algorithm outputs an new ArrayList and feeds that into the cal
 If the program finds any problems it will throw an exception.
 
 ---Instructions
+
 When the calculator starts it will give some initial information.
 You can write 'info' at any time to see this message again.
 If you type 'cmd' you will see all avalible commands and a description of their functions.
@@ -31,5 +33,6 @@ Decimals can be written as either , or .
 Power to is written as: 2^2
 
 ---Links
+
 https://en.wikipedia.org/wiki/Reverse_Polish_notation
 https://en.wikipedia.org/wiki/Shunting-yard_algorithm
